@@ -105,3 +105,8 @@ venv.bak/
 
 # Jetbrains
 .idea
+
+# Project specific
+lambda.zip
+selenium*
+urllib3*

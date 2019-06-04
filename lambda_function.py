@@ -1,11 +1,9 @@
 import os
-import json
 import urllib.parse
 import subprocess as sp
 from time import sleep
 import logging
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 
 logger = logging.getLogger()
@@ -34,21 +32,21 @@ driver = webdriver.Chrome(
 
 
 def lambda_handler(event, context):
-    if 'queryStringParameters' in event and 'url' in event['queryStringParameters']:
-        url = urllib.parse.unquote(event['queryStringParameters']['url'])
-        if 'http' not in url:
-            url = 'http://' + url
-    else:
-        url = 'https://maritimedevcon.ca/'
-
+    url = 'https://maritimedevcon.ca/'
     res = default_res
-    if 'queryStringParameters' in event and 'res' in event['queryStringParameters']:
-        res = event['queryStringParameters']['res'].split('x')
-
     nap = 1
-    if 'queryStringParameters' in event and 'wait' in event['queryStringParameters']:
-        nap = int(event['queryStringParameters']['wait'])
 
+    if 'queryStringParameters' in event:
+        if 'res' in event['queryStringParameters']:
+            res = event['queryStringParameters']['res'].split('x')
+
+        if 'wait' in event['queryStringParameters']:
+            nap = int(event['queryStringParameters']['wait'])
+
+        if 'url' in event['queryStringParameters']:
+            url = urllib.parse.unquote(event['queryStringParameters']['url'])
+            if 'http' not in url:
+                url = 'http://' + url
     try:
         driver.set_window_size(res[0], res[1])
         driver.get(url)
